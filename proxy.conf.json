@@ -1,0 +1,5 @@
+{
+  "/ag-ui": { "target": "http://localhost:4111" },
+  "/llm-defaults": { "target": "http://localhost:4111" },
+  "/charts": { "target": "http://localhost:4111" }
+}

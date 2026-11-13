@@ -8,19 +8,18 @@ import { provideCopilotKit } from '@copilotkit/angular';
 import { DASHBOARD_AGENT_ID } from '../../shared/dashboard-protocol';
 import { a2uiActivityRenderer } from './a2ui/a2ui-activity';
 import { dashboardCatalog } from './a2ui/dashboard-catalog';
-import { SERVER_URL } from './config';
 import { DashboardStore } from './dashboard/dashboard-store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(withFetch()),
+    provideHttpClient(),
 
     provideCopilotKit({
       enableInspector: false,
-      // The agent runs on our Mastra server and speaks AG-UI.
+      // The agent runs on our Mastra server, which also delivers this app.
       selfManagedAgents: {
-        [DASHBOARD_AGENT_ID]: new HttpAgent({ url: `${SERVER_URL}/ag-ui/dashboard` }),
+        [DASHBOARD_AGENT_ID]: new HttpAgent({ url: '/ag-ui/dashboard' }),
       },
       // Our own renderer for A2UI 1.0 activities
       renderActivityMessages: [a2uiActivityRenderer],

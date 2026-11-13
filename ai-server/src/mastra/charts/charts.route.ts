@@ -2,18 +2,17 @@ import { randomUUID } from 'node:crypto';
 
 import { registerApiRoute } from '@mastra/core/server';
 
-const SERVER_URL = process.env['SERVER_URL'] ?? 'http://localhost:4111';
-
 // Charts are kept in memory for the lifetime of the demo server.
 const charts = new Map<string, string>();
 
 /**
  * Stores an SVG chart and returns a short URL for an A2UI Image.
+ * The URL is relative because the server also delivers the client.
  */
 export function publishChart(svg: string): string {
   const id = randomUUID();
   charts.set(id, svg);
-  return `${SERVER_URL}/charts/${id}.svg`;
+  return `/charts/${id}.svg`;
 }
 
 export const chartsRoute = registerApiRoute('/charts/:file', {

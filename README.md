@@ -22,6 +22,15 @@ and streams the result to the client. For the flight analytics example, the
 LLM writes about 360 characters (120 tokens), which become 12,000 characters
 of A2UI JSON with 81 components.
 
+The ideas behind this demo are explained in two articles:
+
+- [A2UI with a DSL: Controllable Dashboards Optimized for Performance](https://www.angulararchitects.io/en/blog/how-i-made-my-a2ui-dashboard-300-times-faster/):
+  The LLM only translates the request into a small DSL, and server code
+  turns it into A2UI. Together with caching, this made the dashboard about
+  300 times faster.
+- [Fewer Tokens, Faster UIs: A2UI Macros for Local and Cloud Models](https://www.angulararchitects.io/en/blog/fewer-tokens-faster-uis-a2ui-macros-for-local-and-cloud-models/):
+  Macros on top of A2UI Express, for local and cloud models such as Gemma 4.
+
 ## Optimized for Small Models
 
 The demo runs on Gemma 4 (on Cloudflare Workers AI) and Gemini Flash Lite
@@ -44,16 +53,34 @@ Gemma 4 in 1 to 6 seconds.
 ```bash
 npm install
 cp .env.example .env   # optional: the UI offers these keys as defaults
-npm start              # server and client
+npm run dev            # dev mode: server and client
 ```
 
-`npm start` runs both parts, which you can also start separately:
+Then open http://localhost:4200. `npm run dev` runs both parts, which you can
+also start separately:
 
-- `npm run ai-server`: Mastra server on http://localhost:4111
-- `npm run client`: Angular client on http://localhost:4200
+- `npm run ai-server`: Mastra server on http://localhost:4111, with Mastra
+  Studio at http://localhost:4111/studio
+- `npm run client`: Angular client on http://localhost:4200. It forwards API
+  calls to the Mastra server (see [proxy.conf.json](proxy.conf.json)).
 
 In the UI, choose the LLM (Gemini Flash Lite or Gemma 4 on Cloudflare
 Workers AI), enter the connection data, and try one of the example prompts.
+
+## Production Build
+
+```bash
+npm run build          # Angular app and Mastra server
+npm start              # both on http://localhost:4111
+```
+
+The Mastra server also delivers the Angular app from `dist/`, so a single
+service is enough for hosting. Stop `npm run dev` before building, since
+both use the `.mastra` folder. On a hosting platform:
+
+- Set `MASTRA_HOST=0.0.0.0`. The server listens on the platform's `PORT`.
+- Don't set the LLM keys there: the server would hand them to every visitor.
+  Visitors enter their own keys instead.
 
 ## How It Works
 

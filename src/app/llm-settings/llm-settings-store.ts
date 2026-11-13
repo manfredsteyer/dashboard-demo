@@ -3,7 +3,6 @@ import { computed, linkedSignal, Service } from '@angular/core';
 import { form, required } from '@angular/forms/signals';
 
 import type { LlmDefaults, LlmProvider, LlmSettings } from '../../../shared/dashboard-protocol';
-import { SERVER_URL } from '../config';
 
 interface LlmSettingsModel {
   provider: LlmProvider;
@@ -18,7 +17,7 @@ interface LlmSettingsModel {
 @Service()
 export class LlmSettingsStore {
   // Values from the server's .env file
-  private readonly defaults = httpResource<LlmDefaults>(() => `${SERVER_URL}/llm-defaults`);
+  private readonly defaults = httpResource<LlmDefaults>(() => '/llm-defaults');
 
   // Starts with the defaults; afterwards, the user edits it via the form
   private readonly model = linkedSignal<LlmSettingsModel>(() =>
