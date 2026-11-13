@@ -39,6 +39,12 @@ testem.log
 /typings
 __screenshots__/
 
+# Environment (keys for the LLMs)
+.env
+
+# Mastra build output
+.mastra
+
 # System files
 .DS_Store
 Thumbs.db
