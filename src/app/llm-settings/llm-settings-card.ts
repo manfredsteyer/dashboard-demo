@@ -40,7 +40,7 @@ import { LlmSettingsStore } from './llm-settings-store';
             <label for="cloudflare-account-id">Account ID</label>
             <input
               id="cloudflare-account-id"
-              type="text"
+              type="password"
               autocomplete="off"
               [formField]="form.cloudflareAccountId"
             />

@@ -3,6 +3,7 @@ import { join } from 'node:path';
 
 import { serveStatic } from '@hono/node-server/serve-static';
 import { Mastra } from '@mastra/core/mastra';
+import { InMemoryStore } from '@mastra/core/storage';
 
 import { chartsRoute } from './charts/charts.route';
 import { dashboardAgent } from './dashboard/dashboard-agent';
@@ -13,8 +14,13 @@ import { llmDefaultsRoute } from './llm/llm-defaults.route';
 // .mastra/output and passes the project root as MASTRA_PROJECT_ROOT.
 const APP_DIR = join(process.env['MASTRA_PROJECT_ROOT'] ?? '', 'dist/dashboard-demo/browser');
 
+const PORT = process.env['PORT'] ?? '4111';
+
 export const mastra = new Mastra({
   agents: { dashboardAgent },
+  // The demo keeps no data. Choosing the in-memory store explicitly keeps
+  // Mastra from warning that it falls back to it.
+  storage: new InMemoryStore(),
   server: {
     // Port: PORT environment variable, default 4111
     apiRoutes: [dashboardRoute, llmDefaultsRoute, chartsRoute],
@@ -24,3 +30,9 @@ export const mastra = new Mastra({
     studioBase: '/studio',
   },
 });
+
+// `mastra dev` sets MASTRA_DEV. In dev mode, the Angular dev server
+// reports its own URL.
+if (process.env['MASTRA_DEV'] !== 'true') {
+  console.log(`Dashboard Demo: http://localhost:${PORT}`);
+}
